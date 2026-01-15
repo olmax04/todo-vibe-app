@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import './TodoItem.css'
+import { useLanguage } from '../contexts/LanguageContext'
+import { translations } from '../translations'
 
 function TodoItem({ todo, onToggle, onDelete, index }) {
+  const { language } = useLanguage()
+  const t = translations[language]
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = () => {
@@ -19,7 +23,7 @@ function TodoItem({ todo, onToggle, onDelete, index }) {
       <button
         className={`checkbox ${todo.completed ? 'checked' : ''}`}
         onClick={() => onToggle(todo.id)}
-        aria-label={todo.completed ? 'Отметить как невыполненное' : 'Отметить как выполненное'}
+        aria-label={todo.completed ? t.addTodo.ariaLabel.markIncomplete : t.addTodo.ariaLabel.markCompleted}
       >
         {todo.completed && (
           <svg
@@ -41,7 +45,7 @@ function TodoItem({ todo, onToggle, onDelete, index }) {
       <button
         className="delete-button"
         onClick={handleDelete}
-        aria-label="Удалить задачу"
+        aria-label={t.addTodo.ariaLabel.delete}
       >
         <svg
           className="delete-icon"

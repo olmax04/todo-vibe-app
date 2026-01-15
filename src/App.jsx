@@ -2,8 +2,14 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import TodoList from './components/TodoList'
 import AddTodo from './components/AddTodo'
+import LanguageSwitcher from './components/LanguageSwitcher'
+import { useLanguage } from './contexts/LanguageContext'
+import { translations } from './translations'
 
 function App() {
+  const { language } = useLanguage()
+  const t = translations[language]
+  
   const [todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem('todos')
     return savedTodos ? JSON.parse(savedTodos) : []
@@ -36,19 +42,21 @@ function App() {
   const completedCount = todos.filter(todo => todo.completed).length
   const totalCount = todos.length
 
+  const subtitleText = totalCount > 0
+    ? t.subtitle.completed.replace('{completed}', completedCount).replace('{total}', totalCount)
+    : t.subtitle.empty
+
   return (
     <div className="app">
+      <LanguageSwitcher />
       <div className="container">
         <header className="header">
           <h1 className="title">
             <span className="title-icon">✓</span>
-            Мои Задачи
+            {t.title}
           </h1>
           <p className="subtitle">
-            {totalCount > 0 
-              ? `Выполнено: ${completedCount} из ${totalCount}`
-              : 'Начните добавлять задачи!'
-            }
+            {subtitleText}
           </p>
         </header>
 
